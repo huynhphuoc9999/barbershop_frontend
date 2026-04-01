@@ -34,7 +34,7 @@ export default function Login() {
   };
 
   const loginGoogle = () => {
-    window.location.href = "http://localhost:8081/oauth2/authorization/google";
+    window.location.href = "https://barbershop-backend-yn3c.onrender.com/oauth2/authorization/google";
   };
 
   return (
