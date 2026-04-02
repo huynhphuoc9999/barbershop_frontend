@@ -12,6 +12,7 @@ import { getAppointmentByBarberId } from "../../services/appointmentServices";
 import { getFeedbackByBarberId } from "../../services/feedbackServices";
 import websocketConfig from "../../utils/websocketConfig";
 import { toast } from "react-toastify";
+
 export default function BarberDashboard() {
   const [appointments, setAppointments] = useState([]);
   const barber = JSON.parse(localStorage.getItem("user"));
@@ -19,19 +20,19 @@ export default function BarberDashboard() {
 
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(4);
-  const [totalPages, setTotalPages] = useState(0);
+  // const [totalPages, setTotalPages] = useState(0);
 
-  const nextPage = () => {
-    if (page < totalPages - 1) {
-      setPage((prev) => prev + 1);
-    }
-  };
+  // const nextPage = () => {
+  //   if (page < totalPages - 1) {
+  //     setPage((prev) => prev + 1);
+  //   }
+  // };
 
-  const prevPage = () => {
-    if (page > 0) {
-      setPage((prev) => prev - 1);
-    }
-  };
+  // const prevPage = () => {
+  //   if (page > 0) {
+  //     setPage((prev) => prev - 1);
+  //   }
+  // };
 
   const [feedbacks, setFeedbacks] = useState([]);
 
@@ -66,7 +67,7 @@ export default function BarberDashboard() {
     setFeedbacks(res.data.data.content);
     setPage(res.data.data.pageable.pageNumber);
     setSize(res.data.data.pageable.pageSize);
-    setTotalPages(res.data.data.totalPages);
+    // setTotalPages(res.data.data.totalPages);
   };
 
   useEffect(() => {

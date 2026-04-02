@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { getUserInfo } from "../../services/userServices";
 import { addOrder } from "../../services/orderServices";
-import { getCart, deleteCart } from "../../services/cartServices";
+import { getCart } from "../../services/cartServices";
 import { toast } from "react-toastify";
 
 export default function Order() {

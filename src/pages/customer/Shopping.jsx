@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { getAllShops } from "../../services/shopServices";
-import { addCartItem } from "../../services/cartServices";
-import { toast } from "react-toastify";
+
 export default function Shopping() {
   const [products, setProducts] = React.useState([]);
 
@@ -15,31 +14,31 @@ export default function Shopping() {
     setProducts(response.data.data.flatMap((shop) => shop.products));
   };
 
-  const addToCart = (product) => {
-    const data = {
-      productId: product.id,
-    };
-    addCartItem(data)
-      .then((res) => {
-        toast.success("Thêm vào giỏ hàng thành công!");
-      })
-      .catch((err) => {
-        toast.error("Thêm vào giỏ hàng thất bại!");
-      });
-  };
+  // const addToCart = (product) => {
+  //   const data = {
+  //     productId: product.id,
+  //   };
+  //   addCartItem(data)
+  //     .then((res) => {
+  //       toast.success("Thêm vào giỏ hàng thành công!");
+  //     })
+  //     .catch((err) => {
+  //       toast.error("Thêm vào giỏ hàng thất bại!");
+  //     });
+  // };
 
-  const buyNow = (product) => {
-    const data = {
-      productId: product.id,
-    };
-    addCartItem(data)
-      .then((res) => {
-        toast.success("Mua ngay thành công!");
-      })
-      .catch((err) => {
-        toast.error("Mua ngay thất bại!");
-      });
-  };
+  // const buyNow = (product) => {
+  //   const data = {
+  //     productId: product.id,
+  //   };
+  //   addCartItem(data)
+  //     .then((res) => {
+  //       toast.success("Mua ngay thành công!");
+  //     })
+  //     .catch((err) => {
+  //       toast.error("Mua ngay thất bại!");
+  //     });
+  // };
 
   return (
     <>

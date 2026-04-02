@@ -6,9 +6,9 @@ import {
 } from "react-icons/fa";
 
 import {
-  addOrder,
+  // addOrder,
   getOrderByCustomerId,
-  getOrderByPage,
+  // getOrderByPage,
 } from "../../services/orderServices";
 
 export default function OrderHistory() {
@@ -44,11 +44,11 @@ export default function OrderHistory() {
     setLoading(false);
   }, [page, size]);
   console.log("Orders state:", orders);
-  const formatCustomDateTime = (value) => {
-    // value kiểu [2025,6,25,12] hoặc tương tự
-    const hour = value[3];
-    return `${hour}:00`;
-  };
+  // const formatCustomDateTime = (value) => {
+  //   // value kiểu [2025,6,25,12] hoặc tương tự
+  //   const hour = value[3];
+  //   return `${hour}:00`;
+  // };
 
   return (
     <div className="p-4 md:p-8 min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white">

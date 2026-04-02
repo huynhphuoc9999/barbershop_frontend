@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { getProductById } from "../../services/productServices";
 import { addCartItem } from "../../services/cartServices";
 import { toast } from "react-toastify";
@@ -12,7 +11,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 
   const fetchProduct = async () => {
     try {

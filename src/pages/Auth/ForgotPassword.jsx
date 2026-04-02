@@ -3,16 +3,20 @@ import { FiArrowLeft, FiMail } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { forgot } from "../../services/authServices";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     await forgot({ email });
     toast.success("Vào email để lấy mã OTP");
+    setLoading(false);
     setTimeout(() => {
       navigate("/reset-password");
     }, 3000);
@@ -65,7 +69,7 @@ export default function ForgotPassword() {
           type="submit"
           className="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold text-lg shadow-md hover:scale-105 transition"
         >
-          Gửi lại mật khẩu
+          {loading ? <ClipLoader size={20} color={"#f7f1f1"} /> : "Gửi OTP"}
         </button>
       </form>
     </div>

@@ -1,16 +1,19 @@
-import React, { use, useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/authServices";
 import { FiPhone, FiLock, FiUser } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const user = await login(username, password); // login() phải trả về user object có `roleEnum`
@@ -21,13 +24,16 @@ export default function Login() {
             replace: true,
           });
         }, 3000);
+        setLoading(false);
 
         localStorage.setItem("user", JSON.stringify(user));
         toast.success("Đăng nhập thành công");
       } else {
+        setLoading
         toast.warning("Bạn không có quyền truy cập");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Login thất bại:", error);
       toast.error("Đăng nhập thất bại");
     }
@@ -89,7 +95,7 @@ export default function Login() {
           type="submit"
           className="w-full py-3 rounded-2xl bg-yellow-500 hover:bg-yellow-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 duration-300"
         >
-          Đăng nhập
+          {loading ? <ClipLoader size={20} color={"#f7f1f1"} /> : "Đăng nhập"}
         </button>
 
         {/* Nút đăng nhập với Google */}

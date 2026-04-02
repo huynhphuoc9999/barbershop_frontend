@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaCalendarCheck, FaMapMarkerAlt, FaStar } from "react-icons/fa";
-import barbershop1 from "../assets/barbershop-1.jpg";
-import barbershop2 from "../assets/barbershop-2.jpg";
-import barbershop3 from "../assets/barbershop-3.jpg";
+
 import barbershopbg from "../assets/barbershop-background.jpg";
 import { getAllShops, searchShop } from "../services/shopServices";
 import { toast } from "react-toastify";
 
-const shopImages = [barbershop1, barbershop2, barbershop3];
 
 const barberAddress = "Tây Ninh";
 

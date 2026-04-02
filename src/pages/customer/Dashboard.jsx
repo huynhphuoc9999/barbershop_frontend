@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FiEdit, FiEye, FiTrash2 } from "react-icons/fi";
-import { getShopsById, getAllShops } from "../../services/shopServices";
+import { getAllShops } from "../../services/shopServices";
 import {
   createAppointment,
   getTimeSlot,
-  getAppointmentByCustomerId,
 } from "../../services/appointmentServices";
-import { getFeedbackByCustomerId } from "../../services/feedbackServices";
 import Select from "react-select";
 import FeedbackForm from "../admin/FeedbackForm";
-import websocketConfig from "../../utils/websocketConfig";
+// import websocketConfig from "../../utils/websocketConfig";
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 
@@ -36,38 +34,38 @@ export default function CustomerDashboard() {
   });
 
   const [shops, setShops] = useState([]); // Mỗi shop có id, name
-  const [barbers, setBarbers] = useState([]); // Tất cả barbers có shopId
-  const [services, setServices] = useState([]); // Tất cả services có shopId
+  // const [barbers, setBarbers] = useState([]); // Tất cả barbers có shopId
+  // const [services, setServices] = useState([]); // Tất cả services có shopId
   const [timeSlot, setTimeSlot] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
+  // const [feedbacks, setFeedbacks] = useState([]);
 
   const [currentShop, setCurrentShop] = useState(null); // Shop đang được chọn
-  const [appointments, setAppointments] = useState([]);
+  // const [appointments, setAppointments] = useState([]);
 
   const filteredBarbers = currentShop ? currentShop.barbers : [];
   const filteredServices = currentShop ? currentShop.services : [];
 
   // modal send feedback
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  // const [showModal, setShowModal] = useState(false);
+  // const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   // Lấy shopId từ URL nếu có
   const [searchParams] = useSearchParams();
   const shopIdFromParams = searchParams.get("shopId");
 
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(4);
-  const [totalPages, setTotalPages] = useState(0);
-  const nextPage = () => {
-    if (page < totalPages - 1) {
-      setPage((prev) => prev + 1);
-    }
-  };
-  const prevPage = () => {
-    if (page > 0) {
-      setPage((prev) => prev - 1);
-    }
-  };
+  // const [page, setPage] = useState(0);
+  // const [size, setSize] = useState(4);
+  // const [totalPages, setTotalPages] = useState(0);
+  // const nextPage = () => {
+  //   if (page < totalPages - 1) {
+  //     setPage((prev) => prev + 1);
+  //   }
+  // };
+  // const prevPage = () => {
+  //   if (page > 0) {
+  //     setPage((prev) => prev - 1);
+  //   }
+  // };
   useEffect(() => {
     if (shopIdFromParams) {
       const findShop = shops.find((s) => s.id === parseInt(shopIdFromParams));
@@ -81,10 +79,10 @@ export default function CustomerDashboard() {
     }
   }, [shopIdFromParams, shops]);
 
-  const openFeedbackForm = (appt) => {
-    setSelectedAppointment(appt);
-    setShowModal(true);
-  };
+  // const openFeedbackForm = (appt) => {
+  //   setSelectedAppointment(appt);
+  //   setShowModal(true);
+  // };
   //
 
   const fetchShops = async () => {
@@ -93,15 +91,15 @@ export default function CustomerDashboard() {
     toast.success(`Xin chào bạn ${customerName}`);
   };
 
-  const fetchFeedbackCustomer = async () => {
-    const res = await getFeedbackByCustomerId(customerId);
-    setFeedbacks(res.data.data);
-  };
+  // const fetchFeedbackCustomer = async () => {
+  //   const res = await getFeedbackByCustomerId(customerId);
+  //   setFeedbacks(res.data.data);
+  // };
 
-  const fetchHistoryAppointment = async () => {
-    const res = await getAppointmentByCustomerId(customerId);
-    setAppointments(res.data.data);
-  };
+  // const fetchHistoryAppointment = async () => {
+  //   const res = await getAppointmentByCustomerId(customerId);
+  //   setAppointments(res.data.data);
+  // };
 
   const fetchTimeSlot = async () => {
     if (formData.shop?.id && formData.barber?.id && formData.date) {
@@ -121,8 +119,8 @@ export default function CustomerDashboard() {
 
   useEffect(() => {
     fetchShops();
-    fetchHistoryAppointment();
-    fetchFeedbackCustomer();
+    // fetchHistoryAppointment();
+    // fetchFeedbackCustomer();
   }, []);
 
   const [user] = useState(() => {
@@ -160,10 +158,10 @@ export default function CustomerDashboard() {
   console.log("backend time ", timeSlot);
   console.log("valai time ", availableTimeSlot);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
 
   console.log(formData);
   const handleSubmit = async () => {

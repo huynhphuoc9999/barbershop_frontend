@@ -3,6 +3,7 @@ import { FiLock, FiUser, FiPhone, FiMail, FiImage } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { register } from "../../services/userServices";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 export default function Register() {
   const [phone, setPhone] = useState("");
@@ -12,8 +13,11 @@ export default function Register() {
   const [img, setImg] = useState(null);
   const [preview, setPreview] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const user = {
       username: name,
       phoneNumber: phone,
@@ -32,8 +36,10 @@ export default function Register() {
 
     const response = await register(formData);
     if (response?.status === 200) {
+      setLoading(false);
       toast.success("Đăng ký thành công");
     } else {
+      setLoading(false);
       toast.error("Đăng ký thất bại");
     }
   };
@@ -134,7 +140,7 @@ export default function Register() {
           type="submit"
           className="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold text-lg shadow-md hover:scale-105 transition"
         >
-          Đăng ký
+            {loading ? <ClipLoader size={20} color={"#f7f1f1"} /> : "Đăng ký"}
         </button>
 
         <div className="mt-6 text-center text-sm text-white">

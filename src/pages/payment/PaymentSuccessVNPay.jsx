@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { ToastContainer, toast, Slide } from "react-toastify";
 import { useLocation } from "react-router-dom"; // React Router hook
 import { executePayment } from "../../services/paymentServices";
-import { toast } from "react-toastify";
 
 const PaymentSuccessVNPay = () => {
   const [loading, setLoading] = useState(true);

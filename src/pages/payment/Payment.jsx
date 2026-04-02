@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { FaCoins } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
 import { createPayment } from "../../services/paymentServices";
-import { toast } from "react-toastify";
 import { GiConsoleController } from "react-icons/gi";
 import { useSearchParams } from "react-router-dom";
 
