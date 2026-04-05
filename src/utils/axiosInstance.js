@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8081/api",
+  baseURL: "https://barbershop-backend-yn3c.onrender.com/api", // url backend in render.com
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
