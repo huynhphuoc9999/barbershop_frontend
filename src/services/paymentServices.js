@@ -1,8 +1,8 @@
 import instance from "../utils/axiosInstance";
 
-export const executePayment = (responseCode, userId, amount) => {
+export const executePayment = (responseCode, userId, amount, txnRef) => {
   return instance.get(
-    `customer/payments/execute/vnpay?vnp_ResponseCode=${responseCode}&userId=${userId}&vnp_Amount=${amount}`,
+    `customer/payments/execute/vnpay?vnp_ResponseCode=${responseCode}&userId=${userId}&vnp_Amount=${amount}&vnp_TxnRef=${txnRef}`,
   );
 };
 

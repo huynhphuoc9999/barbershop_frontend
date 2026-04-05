@@ -15,11 +15,12 @@ const PaymentSuccessVNPay = () => {
     const responseCode = params.get("vnp_ResponseCode");
     const userId = params.get("userId");
     const amount = params.get("vnp_Amount");
+    const txnRef = params.get("vnp_TxnRef");
     const executePayments = async () => {
       try {
         setLoading(true);
         // Call the backend API to execute the payment
-        const res = await executePayment(responseCode, userId, amount);
+        const res = await executePayment(responseCode, userId, amount, txnRef);
 
         if (res.data.statusCode === 200) {
           setMessage("Thanh toán thành công!");
