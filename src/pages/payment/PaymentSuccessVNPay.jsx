@@ -14,8 +14,8 @@ const PaymentSuccessVNPay = () => {
     const params = new URLSearchParams(location.search);
     const responseCode = params.get("vnp_ResponseCode");
     const userId = params.get("userId");
-    const amount = params.get("vnp_Amount");
-
+ const rawAmount = params.get("vnp_Amount");
+const amount = rawAmount ? Number(rawAmount) / 100 : 0;
     const executePayments = async () => {
       try {
         setLoading(true);
