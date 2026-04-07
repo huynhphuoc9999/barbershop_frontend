@@ -1,17 +1,17 @@
 import { useRef, useState, useEffect } from "react";
 
 const hairstyles = [
-  "/hairstyles/style1.png",
-  "/hairstyles/style2.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style4_cqalvb.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style9_ldcrk4.png",
 
-  "/hairstyles/style4.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style1_tbwacc.png",
 
-  "/hairstyles/style7.png",
-  "/hairstyles/style8.png",
-  "/hairstyles/style9.png",
-  "/hairstyles/style10.png",
-  "/hairstyles/style11.png",
-  "/hairstyles/style12.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style8_bbhytn.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style2_roxwpo.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style7_ijh3ew.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528406/style11_um6qjq.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528407/style10_ipovfb.png",
+  "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528407/style12_qf6ani.png",
 ];
 
 export default function TryHairstyle() {

@@ -111,7 +111,7 @@ export default function Payment() {
               </select>
 
               <img
-                src={method === "PayPal" ? "/paypal.webp" : "/vnpay.png"}
+                src={method === "VNPAY" ? "https://res.cloudinary.com/ddacxaajy/image/upload/v1775528980/z7699240097579_3a5739b1ceb4264e827d830b85fac45a_qnamn3.jpg" : "/paypal.webp"}
                 alt="Thanh toán"
                 className="w-20 h-20 object-contain bg-white rounded-lg p-2"
               />
