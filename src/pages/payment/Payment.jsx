@@ -10,6 +10,7 @@ export default function Payment() {
   const [loading, setLoading] = useState(false);
   const [method, setMethod] = useState("VNPAY");
   const [orderId, setOrderId] = useState(null);
+  const [appointmentId, setAppointmentId] = useState(null);
   const [amount, setAmount] = useState(1);
 
   const [searchParams] = useSearchParams();
@@ -22,6 +23,10 @@ export default function Payment() {
     const oid = searchParams.get("orderId");
     if (oid) {
       setOrderId(oid);
+    }
+    const appointmentId = searchParams.get("appointmentId");
+    if (appointmentId) {
+      setAppointmentId(appointmentId);
     }
   }, [searchParams]);
 
@@ -37,6 +42,7 @@ export default function Payment() {
       amount,
       method,
       orderId,
+      appointmentId
     };
 
     try {

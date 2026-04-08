@@ -175,7 +175,7 @@ export default function HistoryBooking() {
                           </button>
                         ) : (
                           <a
-                            href={`/payment-vnpay?amount=${appointment.price}`}
+                            href={`/payment-vnpay?amount=${appointment.price}&appointmentId=${appointment.id}`}
                           >
                             <button
                               className="bg-red-500 text-white px-4 py-1.5
