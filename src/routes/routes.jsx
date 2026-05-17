@@ -32,7 +32,6 @@ export const routes = {
     { path: "/admin/shops", element: <Shops /> },
     { path: "/admin/profile/:id", element: <Profile /> },
     { path: "/admin/payments/shop/:id", element: <Payments /> },
-    { path: "/vnpay-return", element: <PaymentSuccessVNPay /> },
   ],
   Owner: [
     { path: "/owner/dashboard", element: <OwnerDashboard /> },
@@ -42,19 +41,15 @@ export const routes = {
     { path: "/owner/shops", element: <Shops /> },
     { path: "/owner/profile/:id", element: <Profile /> },
     { path: "/owner/payments/shop/:id", element: <Payments /> },
-    { path: "/vnpay-return", element: <PaymentSuccessVNPay /> },
   ],
   Barber: [
     { path: "/barber/dashboard", element: <Dashboard /> },
     { path: "/barber/profile/:id", element: <Profile /> },
-    { path: "/vnpay-return", element: <PaymentSuccessVNPay /> },
   ],
   Customer: [
     { path: "/customer/dashboard", element: <CustomerDashboard /> },
     { path: "/customer/profile/:id", element: <Profile /> },
     { path: "/customer/feedback", element: <FeedbackForm /> },
-    { path: "/oauth2/redirect", element: <OAuth2RedirectHandler /> },
-    { path: "/vnpay-return", element: <PaymentSuccessVNPay /> },
     { path: "/payment-vnpay", element: <Payment /> },
     { path: "/customer/shopping", element: <Shopping /> },
     { path: "/customer/cart", element: <Cart /> },
