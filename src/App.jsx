@@ -17,6 +17,10 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 // Import Homepage
 import HomePage from "./pages/HomePage"; // 🔁 Bạn cần tạo file này
 
+// Import các trang public đặc biệt
+import OAuth2RedirectHandler from "./pages/Auth/OAuth2RedirectHandler";
+import PaymentSuccessVNPay from "./pages/payment/PaymentSuccessVNPay";
+
 function App() {
   return (
     <BrowserRouter>
@@ -65,6 +69,12 @@ function App() {
             </AuthLayout>
           }
         />
+
+        {/* ✅ Public OAuth2 redirect - KHÔNG dùng PrivateRoute vì chưa có token */}
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+
+        {/* ✅ Public VNPay return - KHÔNG dùng PrivateRoute vì VNPay redirect không kèm JWT */}
+        <Route path="/vnpay-return" element={<PaymentSuccessVNPay />} />
 
         {/* ✅ Admin routes */}
         {routes.Admin.map((route, idx) => (
