@@ -35,14 +35,23 @@ export default function Payment() {
     setLoading(true);
     setError("");
 
-    const userId = parseInt(localStorage.getItem("userId"));
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = Number(
+      localStorage.getItem("userId") || user.id || user.userId
+    );
+
+    if (!userId) {
+      setError("Không tìm thấy userId. Vui lòng đăng nhập lại.");
+      setLoading(false);
+      return;
+    }
 
     const paymentData = {
       userId,
-      amount,
+      amount: Number(amount),
       method,
-      orderId,
-      appointmentId
+      orderId: orderId ? Number(orderId) : null,
+      appointmentId: appointmentId ? Number(appointmentId) : null,
     };
 
     try {
@@ -56,7 +65,13 @@ export default function Payment() {
         setError("Không nhận được link thanh toán từ hệ thống.");
       }
     } catch (err) {
-      setError("Lỗi khi thực hiện thanh toán: " + err.message);
+      console.error("Payment error:", err.response?.data || err);
+      const msg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.data ||
+        err.message;
+      setError("Lỗi khi thực hiện thanh toán: " + msg);
     } finally {
       setLoading(false);
     }

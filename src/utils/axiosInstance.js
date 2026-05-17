@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://barbershop-backend-yn3c.onrender.com/api", // url backend in render.com
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "https://barbershop-backend-yn3c.onrender.com/api", // use env variable for flexibility
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

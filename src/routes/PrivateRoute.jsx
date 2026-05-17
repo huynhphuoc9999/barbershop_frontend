@@ -2,13 +2,21 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 export default function PrivateRoute({ children, allowedRoles }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  // if (!user) return <Navigate to="/login" />;
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
 
-  // if (!allowedRoles.includes(user.roleEnum)) {
-  //   return <div>Bạn không có quyền truy cập.</div>;
-  // }
+  if (
+    allowedRoles &&
+    !allowedRoles
+      .map((role) => String(role).toUpperCase())
+      .includes(String(user.roleEnum).toUpperCase())
+  ) {
+    return <Navigate to="/" replace />;
+  }
 
   return children;
 }
