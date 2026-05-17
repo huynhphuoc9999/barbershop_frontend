@@ -10,17 +10,15 @@ const PaymentSuccessVNPay = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Extract query parameters from the URL
-    const params = new URLSearchParams(location.search);
-    const responseCode = params.get("vnp_ResponseCode");
-    const userId = params.get("userId");
-    const amount = params.get("vnp_Amount");
-    const txnRef = params.get("vnp_TxnRef");
     const executePayments = async () => {
       try {
         setLoading(true);
-        // Call the backend API to execute the payment
-        const res = await executePayment(responseCode, userId, amount, txnRef);
+        // Lấy toàn bộ query string VNPay trả về và gửi thẳng lên BE
+        const queryString = location.search.startsWith("?")
+          ? location.search.slice(1)
+          : location.search;
+
+        const res = await executePayment(queryString);
 
         if (res.data.statusCode === 200) {
           setMessage("Thanh toán thành công!");

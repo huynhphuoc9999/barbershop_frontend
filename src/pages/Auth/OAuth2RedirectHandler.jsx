@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "../../services/userServices";
+
 const OAuth2RedirectHandler = () => {
   const navigate = useNavigate();
 
@@ -9,28 +10,43 @@ const OAuth2RedirectHandler = () => {
       const queryParams = new URLSearchParams(window.location.search);
       const token = queryParams.get("token");
 
-      if (token) {
-        localStorage.setItem("token", token);
+      if (!token) {
+        // Không có token → có thể bị lỗi OAuth → về trang login
+        navigate("/login?error=oauth2_failed", { replace: true });
+        return;
+      }
 
-        try {
-          const res = await getUserInfo();
-          localStorage.setItem("user", JSON.stringify(res.data.data));
-          console.log("User info:", res.data.data);
+      localStorage.setItem("token", token);
 
-          navigate("/customer/dashboard");
-        } catch (error) {
-          console.error("Lỗi lấy thông tin người dùng:", error);
-          // Bạn có thể redirect đến trang lỗi hoặc hiển thị thông báo
+      try {
+        const res = await getUserInfo();
+        const user = res.data.data;
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Redirect về đúng dashboard theo role (giống luồng login thường)
+        const role = user?.roleEnum?.toLowerCase();
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          navigate("/", { replace: true });
         }
+      } catch (error) {
+        console.error("Lỗi lấy thông tin người dùng:", error);
+        // Token không hợp lệ → xóa và về login
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/login?error=oauth2_failed", { replace: true });
       }
     };
 
-    handleOAuthRedirect(); // gọi hàm async
-
-    // Không cần return gì ở đây nếu không cleanup
+    handleOAuthRedirect();
   }, [navigate]);
 
-  return <p>Đang đăng nhập bằng Google...</p>;
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <p>Đang đăng nhập bằng Google...</p>
+    </div>
+  );
 };
 
 export default OAuth2RedirectHandler;
