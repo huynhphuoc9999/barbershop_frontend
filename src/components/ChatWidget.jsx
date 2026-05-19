@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { FaComment, FaTimes, FaPaperPlane } from 'react-icons/fa';
 import { streamChatMessage } from '../services/chatbotServices';
 
+const WIDGET_VERSION = 'v1.0.2'; // Build version for debugging
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -32,6 +34,8 @@ export default function ChatWidget() {
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isStreaming) return;
 
+    console.log(`[ChatWidget ${WIDGET_VERSION}] Sending message:`, inputMessage);
+
     const userMessage = {
       id: Date.now(),
       text: inputMessage,
@@ -52,11 +56,13 @@ export default function ChatWidget() {
       inputMessage,
       // onChunk
       (chunk) => {
+        console.log('[ChatWidget] Received chunk:', chunk);
         streamingTextRef.current += chunk; // Accumulate in ref
         setCurrentStreamingMessage(streamingTextRef.current); // Update display
       },
       // onComplete
       () => {
+        console.log('[ChatWidget] Stream complete. Final text:', streamingTextRef.current);
         setMessages((prev) => [
           ...prev,
           {
@@ -72,7 +78,7 @@ export default function ChatWidget() {
       },
       // onError
       (error) => {
-        console.error('Chat error:', error);
+        console.error('[ChatWidget] Chat error:', error);
         setMessages((prev) => [
           ...prev,
           {
@@ -113,7 +119,7 @@ export default function ChatWidget() {
               </div>
               <div>
                 <h3 className="text-white font-bold text-lg">Barbershop Assistant</h3>
-                <p className="text-yellow-100 text-xs">Online • Trả lời ngay</p>
+                <p className="text-yellow-100 text-xs">Online • Trả lời ngay • {WIDGET_VERSION}</p>
               </div>
             </div>
             <button

@@ -30,6 +30,7 @@ export const streamChatMessage = async (message, onChunk, onComplete, onError) =
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
+    let isCompleted = false; // Prevent multiple onComplete calls
 
     const readStream = async () => {
       try {
@@ -37,7 +38,10 @@ export const streamChatMessage = async (message, onChunk, onComplete, onError) =
           const { done, value } = await reader.read();
           
           if (done) {
-            onComplete?.();
+            if (!isCompleted) {
+              isCompleted = true;
+              onComplete?.();
+            }
             break;
           }
 
@@ -52,11 +56,15 @@ export const streamChatMessage = async (message, onChunk, onComplete, onError) =
               const data = line.slice(5).trim(); // Remove 'data:' prefix
               
               if (data === '[DONE]') {
-                onComplete?.();
+                if (!isCompleted) {
+                  isCompleted = true;
+                  onComplete?.();
+                }
                 return;
               }
               
               if (data && data !== '') {
+                console.log('[chatbotServices] Emitting chunk:', data);
                 onChunk?.(data);
               }
             }
