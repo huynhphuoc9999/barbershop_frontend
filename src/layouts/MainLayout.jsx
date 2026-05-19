@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import ChatWidget from "../components/ChatWidget";
 
 export default function MainLayout({ children }) {
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -10,6 +11,7 @@ export default function MainLayout({ children }) {
     <div>
       <Navbar role={role} />
       <div className="">{children}</div>
+      <ChatWidget />
     </div>
   );
 }
