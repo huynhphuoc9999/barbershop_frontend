@@ -18,6 +18,7 @@ export default function ChatWidget() {
   
   const messagesEndRef = useRef(null);
   const abortStreamRef = useRef(null);
+  const streamingTextRef = useRef(''); // Store accumulated streaming text
 
   // Auto scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -42,6 +43,7 @@ export default function ChatWidget() {
     setInputMessage('');
     setIsStreaming(true);
     setCurrentStreamingMessage('');
+    streamingTextRef.current = ''; // Reset streaming text
 
     // Create a placeholder for bot response
     const botMessageId = Date.now() + 1;
@@ -50,7 +52,8 @@ export default function ChatWidget() {
       inputMessage,
       // onChunk
       (chunk) => {
-        setCurrentStreamingMessage((prev) => prev + chunk);
+        streamingTextRef.current += chunk; // Accumulate in ref
+        setCurrentStreamingMessage(streamingTextRef.current); // Update display
       },
       // onComplete
       () => {
@@ -58,12 +61,13 @@ export default function ChatWidget() {
           ...prev,
           {
             id: botMessageId,
-            text: currentStreamingMessage,
+            text: streamingTextRef.current, // Use ref value
             sender: 'bot',
             timestamp: new Date(),
           },
         ]);
         setCurrentStreamingMessage('');
+        streamingTextRef.current = ''; // Clear ref
         setIsStreaming(false);
       },
       // onError
@@ -79,6 +83,7 @@ export default function ChatWidget() {
           },
         ]);
         setCurrentStreamingMessage('');
+        streamingTextRef.current = ''; // Clear ref on error
         setIsStreaming(false);
       }
     );
