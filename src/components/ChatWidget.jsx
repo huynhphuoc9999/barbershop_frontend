@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FaComment, FaTimes, FaPaperPlane } from 'react-icons/fa';
 import { streamChatMessage } from '../services/chatbotServices';
 
-const WIDGET_VERSION = 'v1.0.4'; // Fixed: Don't strip leading spaces (they're Groq tokens!)
+const WIDGET_VERSION = 'v1.0.5'; // Fixed: Add message before clearing streaming state
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,19 +62,28 @@ export default function ChatWidget() {
       },
       // onComplete
       () => {
-        console.log('[ChatWidget] Stream complete. Final text:', streamingTextRef.current);
-        setMessages((prev) => [
-          ...prev,
-          {
+        const finalText = streamingTextRef.current; // Save before any state change
+        console.log('[ChatWidget] Stream complete. Final text:', finalText);
+        console.log('[ChatWidget] Final text length:', finalText.length);
+        
+        // Add bot message FIRST (most important - preserve the text!)
+        setMessages((prev) => {
+          const newMessage = {
             id: botMessageId,
-            text: streamingTextRef.current, // Use ref value
+            text: finalText,
             sender: 'bot',
             timestamp: new Date(),
-          },
-        ]);
-        setCurrentStreamingMessage('');
-        streamingTextRef.current = ''; // Clear ref
-        setIsStreaming(false);
+          };
+          console.log('[ChatWidget] Adding bot message:', newMessage);
+          return [...prev, newMessage];
+        });
+        
+        // Then clean up streaming state (do this AFTER adding message)
+        setTimeout(() => {
+          setCurrentStreamingMessage('');
+          streamingTextRef.current = '';
+          setIsStreaming(false);
+        }, 50); // Small delay ensures message is added first
       },
       // onError
       (error) => {
