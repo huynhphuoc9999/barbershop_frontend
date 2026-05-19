@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FaComment, FaTimes, FaPaperPlane } from 'react-icons/fa';
 import { streamChatMessage } from '../services/chatbotServices';
 
-const WIDGET_VERSION = 'v1.0.3'; // Fixed: Preserve spaces in streaming text
+const WIDGET_VERSION = 'v1.0.4'; // Fixed: Don't strip leading spaces (they're Groq tokens!)
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);

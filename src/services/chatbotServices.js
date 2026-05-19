@@ -53,12 +53,9 @@ export const streamChatMessage = async (message, onChunk, onComplete, onError) =
 
           for (const line of lines) {
             if (line.startsWith('data:')) {
-              // SSE format: "data: content" or "data:[DONE]"
-              // Remove "data:" (5 chars) and optional leading space
-              let data = line.slice(5);
-              if (data.startsWith(' ')) {
-                data = data.slice(1); // Remove SSE format space
-              }
+              // Backend sends raw content from Groq: "data:X" or "data: ch"
+              // The space after colon is part of the content, not SSE format
+              const data = line.substring(5); // Remove "data:" only
               
               if (data === '[DONE]') {
                 if (!isCompleted) {
@@ -68,8 +65,8 @@ export const streamChatMessage = async (message, onChunk, onComplete, onError) =
                 return;
               }
               
-              // Emit all chunks including spaces (don't filter empty strings)
-              if (data) {
+              // Emit all chunks including leading spaces (they're content!)
+              if (data !== '') {
                 console.log('[chatbotServices] Emitting chunk:', JSON.stringify(data));
                 onChunk?.(data);
               }
