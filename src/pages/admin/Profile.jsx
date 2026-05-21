@@ -65,14 +65,14 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* <div className="mt-8 text-center">
+        <div className="mt-8 text-center">
           <button
             onClick={() => setShowEditModal(true)}
             className="bg-yellow-500 text-black font-bold px-6 py-2 rounded-xl shadow hover:bg-yellow-400 transition duration-300"
           >
             ✏️ Chỉnh sửa hồ sơ
           </button>
-        </div> */}
+        </div>
       </div>
 
       {/* Modal Sửa */}

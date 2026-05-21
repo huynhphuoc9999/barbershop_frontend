@@ -5,8 +5,9 @@ import {
   createAppointment,
   getTimeSlot,
 } from "../../services/appointmentServices";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import FeedbackForm from "../admin/FeedbackForm";
+import { getFeedbackByBarberId } from "../../services/feedbackServices";
 // import websocketConfig from "../../utils/websocketConfig";
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
@@ -38,6 +39,7 @@ export default function CustomerDashboard() {
   // const [services, setServices] = useState([]); // Tất cả services có shopId
   const [timeSlot, setTimeSlot] = useState([]);
   // const [feedbacks, setFeedbacks] = useState([]);
+  const [barberRatings, setBarberRatings] = useState({}); // Store ratings for each barber
 
   const [currentShop, setCurrentShop] = useState(null); // Shop đang được chọn
   // const [appointments, setAppointments] = useState([]);
@@ -75,6 +77,10 @@ export default function CustomerDashboard() {
           ...prev,
           shop: { id: findShop.id },
         }));
+        // Fetch ratings for barbers in this shop
+        if (findShop.barbers && findShop.barbers.length > 0) {
+          fetchBarberRatings(findShop.barbers);
+        }
       }
     }
   }, [shopIdFromParams, shops]);
@@ -111,6 +117,30 @@ export default function CustomerDashboard() {
       console.log("fetch time", res.data.data);
       setTimeSlot(res.data.data);
     }
+  };
+
+  // Fetch ratings for all barbers in current shop
+  const fetchBarberRatings = async (barbers) => {
+    const ratings = {};
+    for (const barber of barbers) {
+      try {
+        const res = await getFeedbackByBarberId(barber.id, 0, 100);
+        const feedbacks = res.data.data?.content || [];
+        if (feedbacks.length > 0) {
+          const avgRating = feedbacks.reduce((sum, fb) => sum + fb.rating, 0) / feedbacks.length;
+          ratings[barber.id] = {
+            average: avgRating.toFixed(1),
+            count: feedbacks.length
+          };
+        } else {
+          ratings[barber.id] = { average: 0, count: 0 };
+        }
+      } catch (error) {
+        console.error(`Error fetching ratings for barber ${barber.id}:`, error);
+        ratings[barber.id] = { average: 0, count: 0 };
+      }
+    }
+    setBarberRatings(ratings);
   };
 
   useEffect(() => {
@@ -164,6 +194,54 @@ export default function CustomerDashboard() {
   // };
 
   console.log(formData);
+
+  // Custom Option component for barber select
+  const BarberOption = (props) => {
+    const barber = props.data;
+    const rating = barberRatings[barber.id] || { average: 0, count: 0 };
+    
+    return (
+      <components.Option {...props}>
+        <div className="flex items-center gap-3 py-2">
+          <img
+            src={barber.img || "/user.jpg"}
+            alt={barber.username}
+            className="w-10 h-10 rounded-full object-cover border-2 border-yellow-400"
+          />
+          <div className="flex-1">
+            <div className="font-semibold">{barber.username}</div>
+            <div className="flex items-center gap-1 text-sm">
+              <span className="text-yellow-400">⭐ {rating.average}</span>
+              <span className="text-gray-400">({rating.count} đánh giá)</span>
+            </div>
+          </div>
+        </div>
+      </components.Option>
+    );
+  };
+
+  // Custom SingleValue component for selected barber
+  const BarberSingleValue = (props) => {
+    const barber = props.data;
+    const rating = barberRatings[barber.id] || { average: 0, count: 0 };
+    
+    return (
+      <components.SingleValue {...props}>
+        <div className="flex items-center gap-2">
+          <img
+            src={barber.img || "/user.jpg"}
+            alt={barber.username}
+            className="w-8 h-8 rounded-full object-cover border-2 border-yellow-400"
+          />
+          <div>
+            <span className="font-semibold">{barber.username}</span>
+            <span className="ml-2 text-yellow-400 text-sm">⭐ {rating.average}</span>
+          </div>
+        </div>
+      </components.SingleValue>
+    );
+  };
+
   const handleSubmit = async () => {
     // VALIDATE TRƯỚC
     if (
@@ -229,6 +307,10 @@ export default function CustomerDashboard() {
                   shop: { id: selectedShop.id },
                   customer: { id: customerId },
                 }));
+                // Fetch ratings for barbers in the selected shop
+                if (selectedShop.barbers && selectedShop.barbers.length > 0) {
+                  fetchBarberRatings(selectedShop.barbers);
+                }
               }}
               options={shops}
               getOptionLabel={(option) => option.name}
@@ -313,6 +395,7 @@ export default function CustomerDashboard() {
               options={filteredBarbers}
               getOptionLabel={(option) => option.username}
               getOptionValue={(option) => option.id}
+              components={{ Option: BarberOption, SingleValue: BarberSingleValue }}
               className="bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow"
               placeholder={
                 currentShop ? "Chọn barber..." : "Hãy chọn shop trước"

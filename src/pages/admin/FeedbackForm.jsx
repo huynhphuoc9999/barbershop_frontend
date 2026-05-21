@@ -39,12 +39,14 @@ export default function FeedbackForm({ show, onHide, appointment }) {
       await createFeedback(formData);
       const res = await getFeedbackByCustomerId(formData.customerId);
       console.log("Feedback send", res.data.data);
-      toast.success("Gửi phản hồi thành công");
+      toast.success("Gửi phản hồi thành công! Đang chuyển trang...");
       setTimeout(() => {
         onHide();
-      }, 3000);
+        window.location.href = "/customer/history-booking";
+      }, 2000);
     } catch (err) {
       console.error(err);
+      toast.error("Gửi feedback thất bại. Vui lòng thử lại!");
     }
   };
 
@@ -54,14 +56,12 @@ export default function FeedbackForm({ show, onHide, appointment }) {
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
       <div className="bg-zinc-900 w-full max-w-lg rounded-2xl shadow-2xl p-6 relative border border-yellow-500">
         {/* Close */}
-        <a href="/customer/history-booking">
-          <button
-            className="absolute top-3 right-3 text-gray-400 hover:text-yellow-400 text-2xl"
-            onClick={onHide}
-          >
-            x
-          </button>
-        </a>
+        <button
+          className="absolute top-3 right-3 text-gray-400 hover:text-yellow-400 text-2xl"
+          onClick={onHide}
+        >
+          ✕
+        </button>
 
         {/* Title */}
         <h2 className="text-2xl font-bold mb-6 text-yellow-400 text-center">

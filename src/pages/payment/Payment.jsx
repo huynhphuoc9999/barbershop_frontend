@@ -17,7 +17,7 @@ export default function Payment() {
 
   useEffect(() => {
     const amt = Number(searchParams.get("amount"));
-    if (amt && amt >= 10000) {
+    if (amt) {
       setAmount(amt);
     }
     const oid = searchParams.get("orderId");
