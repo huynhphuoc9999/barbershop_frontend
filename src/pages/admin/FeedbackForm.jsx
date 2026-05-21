@@ -1,9 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
-import {
-  createFeedback,
-  getFeedbackByCustomerId,
-} from "../../services/feedbackServices";
+import { createFeedback } from "../../services/feedbackServices";
 import { toast } from "react-toastify";
 
 export default function FeedbackForm({ show, onHide, appointment }) {
@@ -37,8 +33,6 @@ export default function FeedbackForm({ show, onHide, appointment }) {
 
     try {
       await createFeedback(formData);
-      const res = await getFeedbackByCustomerId(formData.customerId);
-      console.log("Feedback send", res.data.data);
       toast.success("Gửi phản hồi thành công! Đang chuyển trang...");
       setTimeout(() => {
         onHide();
