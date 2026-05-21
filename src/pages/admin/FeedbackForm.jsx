@@ -33,11 +33,10 @@ export default function FeedbackForm({ show, onHide, appointment }) {
 
     try {
       await createFeedback(formData);
-      toast.success("Gửi phản hồi thành công! Đang chuyển trang...");
+      toast.success("Gửi phản hồi thành công!");
       setTimeout(() => {
-        onHide();
-        window.location.href = "/customer/history-booking";
-      }, 2000);
+        onHide(); // Đóng modal và refetch data
+      }, 1500);
     } catch (err) {
       console.error(err);
       toast.error("Gửi feedback thất bại. Vui lòng thử lại!");

@@ -77,11 +77,6 @@ export default function HistoryBooking() {
     setShowModal(true);
   };
 
-  // Check if appointment already has feedback
-  const hasFeedback = (appointmentId) => {
-    return feedbacks.some((fb) => fb.appointmentId === appointmentId);
-  };
-
   const formatCustomDateTime = (value) => {
     // value kiểu [2025,6,25,12] hoặc tương tự
     const hour = value[3];
@@ -170,7 +165,7 @@ export default function HistoryBooking() {
 
                       <td className="px-6 py-4 flex justify-center gap-3">
                         {appointment.paid ? (
-                          hasFeedback(appointment.id) ? (
+                          appointment.feedback ? (
                             <span className="text-green-400 text-sm font-semibold flex items-center gap-1">
                               <FaCheckCircle /> Đã gửi feedback
                             </span>
@@ -301,7 +296,12 @@ export default function HistoryBooking() {
         {showModal && (
           <FeedbackForm
             show={showModal}
-            onHide={() => setShowModal(false)}
+            onHide={() => {
+              setShowModal(false);
+              // Refetch data sau khi đóng modal
+              fetchHistoryAppointment();
+              fetchFeedbackCustomer();
+            }}
             appointment={selectedAppointment}
           />
         )}
