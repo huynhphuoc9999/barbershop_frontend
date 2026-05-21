@@ -1,74 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast, Slide } from "react-toastify";
-import { useLocation } from "react-router-dom"; // React Router hook
-import { executePayment } from "../../services/paymentServices";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const PaymentSuccessVNPay = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState(null);
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const executePayments = async () => {
-      try {
-        setLoading(true);
-        // Lấy toàn bộ query string VNPay trả về và gửi thẳng lên BE
-        const queryString = location.search.startsWith("?")
-          ? location.search.slice(1)
-          : location.search;
+    const status = searchParams.get("status");
+    const paymentId = searchParams.get("paymentId");
+    const appointmentId = searchParams.get("appointmentId");
+    const reason = searchParams.get("reason");
 
-        const res = await executePayment(queryString);
+    setLoading(false);
 
-        if (res.data.statusCode === 200) {
-          setMessage("Thanh toán thành công!");
-          toast.success("Thanh toán thành công !", {
-            position: "top-right",
-            autoClose: 3000,
-            transition: Slide,
-          });
+    if (status === "success") {
+      setMessage("Thanh toán thành công!");
+      toast.success("Thanh toán thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        transition: Slide,
+      });
 
-          setTimeout(() => {
-            window.location.replace("/");
-          }, 3000);
+      setTimeout(() => {
+        if (appointmentId) {
+          navigate("/customer/history-booking");
         } else {
-          setMessage("Thanh toán thất bại!");
+          navigate("/customer/order-history");
         }
-      } catch (err) {
-        console.error("Error executing payment", err);
-        setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
-        toast.error("Thanh toán thất bại!", {
-          position: "top-right",
-          autoClose: 3000,
-          transition: Slide,
-        });
+      }, 3000);
+    } else {
+      const errorMsg = reason ? `Thanh toán thất bại: ${reason}` : "Thanh toán thất bại!";
+      setMessage(errorMsg);
+      toast.error(errorMsg, {
+        position: "top-right",
+        autoClose: 3000,
+        transition: Slide,
+      });
 
-        setTimeout(() => {
-          window.location.replace("/");
-        }, 3000);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    executePayments();
-  }, [location.search]);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    }
+  }, [searchParams, navigate]);
 
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 p-6">
       <ToastContainer />
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-        <h2 className="text-2xl font-bold mb-4 text-blue-600">
-          Thanh toán VNPay
+      <div className="bg-gray-900 rounded-2xl shadow-2xl border border-yellow-500 p-8 max-w-md w-full text-center">
+        <h2 className="text-2xl font-bold mb-4 text-yellow-400">
+          Kết quả thanh toán VNPay
         </h2>
         {loading ? (
-          <p className="text-gray-600 text-lg"> Đang xử lý thanh toán...</p>
+          <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mb-4"></div>
+            <p className="text-gray-300 text-lg">Đang xử lý...</p>
+          </div>
         ) : (
-          <p className="text-green-600 text-lg font-medium">{message}</p>
-        )}
-        {error && (
-          <div className="mt-4 text-red-600 bg-red-100 p-3 rounded-md text-sm">
-            {error}
+          <div className="flex flex-col items-center">
+            {message.includes("thành công") ? (
+              <div className="text-green-400 text-5xl mb-4">✓</div>
+            ) : (
+              <div className="text-red-400 text-5xl mb-4">✗</div>
+            )}
+            <p className={`${message.includes("thành công") ? "text-green-400" : "text-red-400"} text-lg font-medium`}>
+              {message}
+            </p>
           </div>
         )}
       </div>

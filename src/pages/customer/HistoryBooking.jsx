@@ -77,6 +77,11 @@ export default function HistoryBooking() {
     setShowModal(true);
   };
 
+  // Check if appointment already has feedback
+  const hasFeedback = (appointmentId) => {
+    return feedbacks.some((fb) => fb.appointmentId === appointmentId);
+  };
+
   const formatCustomDateTime = (value) => {
     // value kiểu [2025,6,25,12] hoặc tương tự
     const hour = value[3];
@@ -165,14 +170,20 @@ export default function HistoryBooking() {
 
                       <td className="px-6 py-4 flex justify-center gap-3">
                         {appointment.paid ? (
-                          <button
-                            onClick={() => openFeedbackForm(appointment)}
-                            className="bg-yellow-400 text-black px-4 py-1.5
+                          hasFeedback(appointment.id) ? (
+                            <span className="text-green-400 text-sm font-semibold flex items-center gap-1">
+                              <FaCheckCircle /> Đã gửi feedback
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => openFeedbackForm(appointment)}
+                              className="bg-yellow-400 text-black px-4 py-1.5
                                        rounded-full font-semibold text-sm
                                        hover:bg-yellow-500 transition shadow"
-                          >
-                            Gửi Feedback
-                          </button>
+                            >
+                              Gửi Feedback
+                            </button>
+                          )
                         ) : (
                           <a
                             href={`/payment-vnpay?amount=${appointment.price}&appointmentId=${appointment.id}`}

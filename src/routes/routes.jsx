@@ -25,7 +25,10 @@ import OrderHistory from "../pages/customer/OrderHistory";
 import Order from "../pages/customer/Order";
 
 export const routes = {
-  Public: [{ path: "/", element: <HomePage /> }],
+  Public: [
+    { path: "/", element: <HomePage /> },
+    { path: "/vnpay-return", element: <PaymentSuccessVNPay /> },
+  ],
   Admin: [
     { path: "/admin/dashboard", element: <AdminDashboard /> },
     { path: "/admin/users", element: <Users /> },
