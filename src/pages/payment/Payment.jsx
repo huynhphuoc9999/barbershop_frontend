@@ -93,7 +93,7 @@ export default function Payment() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              min={10000}
+              min={1}
               required
               placeholder="Nhập số tiền..."
               className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none"

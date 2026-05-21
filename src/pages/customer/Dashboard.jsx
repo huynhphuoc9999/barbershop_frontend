@@ -10,10 +10,11 @@ import FeedbackForm from "../admin/FeedbackForm";
 import { getFeedbackByBarberId } from "../../services/feedbackServices";
 // import websocketConfig from "../../utils/websocketConfig";
 import { toast } from "react-toastify";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 export default function CustomerDashboard() {
   const userId = JSON.parse(localStorage.getItem("user")).id;
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     appointmentStatus: "DONE", // Ví dụ: "PENDING", "COMPLETED", v.v.
@@ -257,9 +258,13 @@ export default function CustomerDashboard() {
 
     try {
       await createAppointment(formData);
-      toast.success("Đặt lịch thành công");
+      toast.success("Đặt lịch thành công! Đang chuyển trang...");
+      setTimeout(() => {
+        navigate("/customer/history-booking");
+      }, 1500);
     } catch (error) {
       console.error("Lỗi đặt lịch:", error);
+      toast.error("Đặt lịch thất bại. Vui lòng thử lại!");
     }
   };
 
