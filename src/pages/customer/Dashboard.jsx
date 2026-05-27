@@ -180,11 +180,26 @@ export default function CustomerDashboard() {
     // ...
   ];
 
-  const cleanedBookedTimes = timeSlot.map((t) => t.trim());
+  const totalDuration = formData.services.reduce((total, selService) => {
+    const service = filteredServices.find((s) => s.id === selService.id);
+    return total + (service?.duration || 0);
+  }, 0);
 
-  const availableTimeSlot = timeSlots.filter(
-    (slot) => !cleanedBookedTimes.includes(slot.startTime?.trim()),
-  );
+  const toMinutes = (timeStr) => {
+    const [h, m] = timeStr.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  const availableTimeSlot = timeSlots.filter((slot) => {
+    if (timeSlot.length === 0 || totalDuration === 0) return true;
+    const slotStart = toMinutes(slot.startTime);
+    const slotEnd = slotStart + totalDuration;
+    return !timeSlot.some((booked) => {
+      const bookedStart = toMinutes(booked.startTime);
+      const bookedEnd = toMinutes(booked.endTime);
+      return slotStart < bookedEnd && slotEnd > bookedStart;
+    });
+  });
 
   console.log("backend time ", timeSlot);
   console.log("valai time ", availableTimeSlot);
@@ -257,7 +272,11 @@ export default function CustomerDashboard() {
     }
 
     try {
-      await createAppointment(formData);
+      const res = await createAppointment(formData);
+      if (res.data.statusCode === 409) {
+        toast.error(res.data.message);
+        return;
+      }
       toast.success("Đặt lịch thành công! Đang chuyển trang...");
       setTimeout(() => {
         navigate("/customer/history-booking");
@@ -395,6 +414,7 @@ export default function CustomerDashboard() {
                 setFormData((prev) => ({
                   ...prev,
                   barber: { id: selected.id },
+                  timeSlot: "",
                 }))
               }
               options={filteredBarbers}
@@ -481,6 +501,7 @@ export default function CustomerDashboard() {
                   price: selected
                     ? selected.reduce((total, s) => total + s.price, 0)
                     : 0,
+                  timeSlot: "",
                 }))
               }
               options={filteredServices}
@@ -557,7 +578,7 @@ export default function CustomerDashboard() {
               type="date"
               value={formData.date}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, date: e.target.value }))
+                setFormData((prev) => ({ ...prev, date: e.target.value, timeSlot: "" }))
               }
               className="w-full px-4 py-2 rounded-xl bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow custom-datepicker"
             />
